@@ -3,18 +3,18 @@ detect:
   traffic_light:
     red:
       hue_l: 0
-      hue_h: 26
-      saturation_l: 239
+      hue_h: 175
+      saturation_l: 183
       saturation_h: 255
-      lightness_l: 123
-      lightness_h: 250
+      lightness_l: 22
+      lightness_h: 190
     yellow:
-      hue_l: 19
-      hue_h: 33
-      saturation_l: 237
+      hue_l: 0
+      hue_h: 175
+      saturation_l: 148
       saturation_h: 255
-      lightness_l: 231
-      lightness_h: 255
+      lightness_l: 22
+      lightness_h: 190
     green:
       hue_l: 40
       hue_h: 113
