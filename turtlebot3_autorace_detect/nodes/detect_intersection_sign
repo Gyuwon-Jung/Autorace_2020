@@ -31,7 +31,7 @@ from cv_bridge import CvBridge, CvBridgeError
 class DetectSign():
     def __init__(self):
         self.fnPreproc()
-        
+
         self.sub_image_type = "raw" # you can choose image type "compressed", "raw"
         self.pub_image_type = "compressed" # you can choose image type "compressed", "raw"
 
@@ -112,6 +112,7 @@ class DetectSign():
         matches_intersection = self.flann.knnMatch(des1,self.des_intersection,k=2)
         matches_left = self.flann.knnMatch(des1,self.des_left,k=2)
         matches_right = self.flann.knnMatch(des1,self.des_right,k=2)
+        matches_donotenter = self.flann.knnMatch(des1, self.des_donotenter, k=2)
 
         image_out_num = 1
 
@@ -183,6 +184,26 @@ class DetectSign():
             matches_right = None
             # rospy.loginfo("nothing detected")
 
+        good_donotenter = []
+        for m, n in matches_donotenter:
+            if m.distance < 0.7 * n.distance:
+                good_donotenter.append(m)
+        if len(good_donotenter) > MIN_MATCH_COUNT:
+            src_pts = np.float32([kp1[m.queryIdx].pt for m in good_donotenter]).reshape(-1, 1, 2)
+            dst_pts = np.float32([self.kp_donotenter[m.trainIdx].pt for m in good_donotenter]).reshape(-1, 1, 2)
+
+            M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
+            matches_donotenter = mask.ravel().tolist()
+
+            mse = self.fnCalcMSE(src_pts, dst_pts)
+            if mse < MIN_MSE_DECISION:
+                msg_sign = UInt8()
+                msg_sign.data = self.TrafficSign.donotenter.value
+
+                self.pub_traffic_sign.publish(msg_sign)
+                rospy.loginfo("detect do not enter sign")
+                image_out_num = 5
+
         if image_out_num == 1:
             if self.pub_image_type == "compressed":
                 # publishes traffic sign image in compressed type
@@ -239,6 +260,18 @@ class DetectSign():
             elif self.pub_image_type == "raw":
                 # publishes traffic sign image in raw type
                 self.pub_image_traffic_sign.publish(self.cvBridge.cv2_to_imgmsg(fianl_right, "bgr8"))
+
+        elif image_out_num == 5:
+            # 터틀봇 움직임을 1초 동안 멈추는 코드 추가
+            rospy.loginfo("Pausing TurtleBot motion for 1 second")
+            # # cmd_vel 토픽에 멈춤 메시지 발행
+            # stop_msg = Twist()
+            # stop_msg.linear.x = 0.0
+            # stop_msg.angular.z = 0.0
+            # self.pub_cmd_vel.publish(stop_msg)
+
+            # 1초간 멈춤을 위해 대기
+            rospy.sleep(1.0)
 
     def main(self):
         rospy.spin()
