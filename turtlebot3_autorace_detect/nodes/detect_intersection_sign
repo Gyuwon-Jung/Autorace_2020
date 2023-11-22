@@ -68,10 +68,12 @@ class DetectSign():
         self.img_intersection = cv2.imread(dir_path + 'intersection.png',0)
         self.img_left  = cv2.imread(dir_path + 'left.png',0)
         self.img_right = cv2.imread(dir_path + 'right.png',0)
+        self.img_donotenter = cv2.imread(dir_path + 'donotenter.png',0)
 
         self.kp_intersection, self.des_intersection  = self.sift.detectAndCompute(self.img_intersection, None)
         self.kp_left, self.des_left  = self.sift.detectAndCompute(self.img_left, None)
         self.kp_right, self.des_right = self.sift.detectAndCompute(self.img_right, None)
+        self.kp_donotenter, self.des_donotenter = self.sift.detectAndCompute(self.img_donotenter, None)
 
         FLANN_INDEX_KDTREE = 0
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
@@ -245,22 +247,3 @@ if __name__ == '__main__':
     rospy.init_node('detect_sign')
     node = DetectSign()
     node.main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

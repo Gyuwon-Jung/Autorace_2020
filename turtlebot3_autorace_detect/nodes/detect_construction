@@ -79,7 +79,7 @@ class DetectContruction():
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go straight")
             msg_moving.moving_type= 4
@@ -91,7 +91,7 @@ class DetectContruction():
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go right")
             msg_moving.moving_type=3
@@ -103,19 +103,19 @@ class DetectContruction():
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go straight")
             msg_moving.moving_type= 4
             msg_moving.moving_value_angular=0.0
-            msg_moving.moving_value_linear=0.5
+            msg_moving.moving_value_linear=0.38
             self.pub_moving.publish(msg_moving)
             while True:
                 if self.is_moving_complete == True:
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go right")
             msg_moving.moving_type=3
@@ -127,19 +127,19 @@ class DetectContruction():
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go straight")
             msg_moving.moving_type= 4
             msg_moving.moving_value_angular=0.0
-            msg_moving.moving_value_linear=0.4
+            msg_moving.moving_value_linear=0.2 #0.25
             self.pub_moving.publish(msg_moving)
             while True:
                 if self.is_moving_complete == True:
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go left")
             msg_moving.moving_type=2
@@ -151,19 +151,19 @@ class DetectContruction():
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go straight")
             msg_moving.moving_type=4
             msg_moving.moving_value_angular=0.0
-            msg_moving.moving_value_linear=0.4
+            msg_moving.moving_value_linear=0.45
             self.pub_moving.publish(msg_moving)
             while True:
                 if self.is_moving_complete == True:
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go left")
             msg_moving.moving_type=2
@@ -175,7 +175,7 @@ class DetectContruction():
                     break
             self.is_moving_complete = False
 
-            rospy.sleep(1)
+            rospy.sleep(0.5)
 
             rospy.loginfo("go straight")
             msg_moving.moving_type=4
@@ -195,13 +195,13 @@ class DetectContruction():
             msg_pub_construction_return.data = self.StepOfConstruction.exit.value
 
         self.pub_construction_return.publish(msg_pub_construction_return)
-        rospy.sleep(3)
+        #rospy.sleep(3)
 
     def cbScanObstacle(self, scan):
-        angle_scan = 25
+        angle_scan = 10
         scan_start = 0 - angle_scan
         scan_end = 0 + angle_scan
-        threshold_distance = 0.2
+        threshold_distance = 0.3
         is_obstacle_detected = False
 
         for i in range(scan_start, scan_end):
